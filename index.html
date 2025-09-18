@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora Científica</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #2c3e50;
+      --secondary: #3498db;
+      --accent1: #e74c3c;
+      --accent2: #2ecc71;
+      --light: #ecf0f1;
+      --dark: #2c3e50;
+      --card-bg: #ffffff;
+      --shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      color: var(--dark);
+      line-height: 1.6;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+      padding: 20px;
+      background: var(--primary);
+      color: white;
+      border-radius: 10px;
+      box-shadow: var(--shadow);
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+    
+    .subtitle {
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
+    
+    .tabs {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+    
+    .tab-btn {
+      padding: 15px 25px;
+      background: var(--secondary);
+      color: white;
+      border: none;
+      border-radius: 8px 8px 0 0;
+      cursor: pointer;
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin: 0 5px;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .tab-btn:hover {
+      background: #2980b9;
+      transform: translateY(-3px);
+    }
+    
+    .tab-btn.active {
+      background: var(--primary);
+    }
+    
+    .tab-btn i {
+      font-size: 1.2rem;
+    }
+    
+    .content-section {
+      background: var(--card-bg);
+      border-radius: 10px;
+      padding: 30px;
+      box-shadow: var(--shadow);
+      margin-bottom: 30px;
+      display: none;
+    }
+    
+    .content-section.active {
+      display: block;
+      animation: fadeIn 0.5s ease;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    h2 {
+      color: var(--primary);
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--secondary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .description {
+      margin-bottom: 25px;
+      line-height: 1.6;
+    }
+    
+    .input-group {
+      margin-bottom: 20px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: var(--dark);
+    }
+    
+    input {
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid #ddd;
+      border-radius: 6px;
+      font-size: 1rem;
+      transition: border 0.3s ease;
+    }
+    
+    input:focus {
+      border-color: var(--secondary);
+      outline: none;
+    }
+    
+    .calc-btn {
+      display: block;
+      width: 100%;
+      padding: 15px;
+      background: var(--accent2);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      margin-top: 20px;
+    }
+    
+    .calc-btn:hover {
+      background: #27ae60;
+    }
+    
+    .resultado {
+      margin-top: 25px;
+      padding: 20px;
+      background: #e8f4fc;
+      border-radius: 8px;
+      border-left: 4px solid var(--secondary);
+    }
+    
+    .resultado h3 {
+      color: var(--primary);
+      margin-bottom: 10px;
+    }
+    
+    .gif-container {
+      text-align: center;
+      margin: 25px 0;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    
+    .gif-container img {
+      max-width: 100%;
+      border-radius: 8px;
+    }
+    
+    .formula {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 8px;
+      margin: 20px 0;
+      font-family: 'Courier New', monospace;
+      border-left: 4px solid var(--accent1);
+    }
+    
+    @media (max-width: 768px) {
+      .tab-btn {
+        padding: 12px 15px;
+        font-size: 1rem;
+      }
+      
+      .content-section {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1><i class="fas fa-calculator"></i> Calculadora Científica</h1>
+      <p class="subtitle">Herramientas para datación por Carbono-14 y Ley de Enfriamiento de Newton</p>
+    </header>
+    
+    <div class="tabs">
+      <button class="tab-btn active" onclick="showTab('carbono')">
+        <i class="fas fa-history"></i> Carbono-14
+      </button>
+      <button class="tab-btn" onclick="showTab('newton')">
+        <i class="fas fa-thermometer-half"></i> Ley de Enfriamiento
+      </button>
+    </div>
+    
+    <!-- Sección Carbono-14 -->
+    <section id="carbono" class="content-section active">
+      <h2><i class="fas fa-bone"></i> Datación por Carbono-14</h2>
+      
+      <div class="gif-container">
+        <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExaDN2enhwYmI4ZTM1OHR5NGQ0ZmZ5b2tibTE4aXY3bG9zdTJ1bTJlYyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/s9IqR3MLzUbAc/giphy.gif" alt="Excavación arqueológica">
+      </div>
+      
+      <p class="description">
+        El carbono-14 es un método de datación radiométrica que utiliza la desintegración 
+        radiactiva del isótopo carbono-14 para estimar la edad de materiales orgánicos.
+      </p>
+      
+      <div class="formula">
+        Fórmula: f(t) = f(0) · e<sup>kt</sup>
+      </div>
+      
+      <div class="input-group">
+        <label for="vida"><i class="fas fa-hourglass-half"></i> Vida media (años):</label>
+        <input type="number" id="vida" value="5730" min="1">
+      </div>
+      
+      <div class="input-group">
+        <label for="porcentaje"><i class="fas fa-percentage"></i> Porcentaje presente (% del inicial):</label>
+        <input type="number" id="porcentaje" value="77.45" step="0.01" min="0.01" max="100">
+      </div>
+      
+      <button class="calc-btn" onclick="calcularCarbono()">
+        <i class="fas fa-calculator"></i> Calcular Edad
+      </button>
+      
+      <div class="resultado" id="resultadoCarbono">
+        <h3><i class="fas fa-info-circle"></i> Resultado</h3>
+        <p>Ingresa los datos y presiona "Calcular Edad" para obtener resultados.</p>
+      </div>
+    </section>
+    
+    <!-- Sección Newton -->
+    <section id="newton" class="content-section">
+      <h2><i class="fas fa-temperature-low"></i> Ley de Enfriamiento de Newton</h2>
+      
+      <div class="gif-container">
+        <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZWdrMmpuc3RvY3doeGx6OWE3YzR0eTI3aTQzNnE5N3d5YW43c3VmaiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/4GZwzdvW0m0Cbxrdav/giphy.gif" alt="Escena de investigación">
+      </div>
+      
+      <p class="description">
+        La Ley de Enfriamiento de Newton establece que la tasa de pérdida de calor de un cuerpo 
+        es proporcional a la diferencia de temperatura entre el cuerpo y su entorno.
+      </p>
+      
+      <div class="formula">
+        Fórmula: T(t) = T<sub>s</sub> + (T<sub>0</sub> - T<sub>s</sub>) · e<sup>-kt</sup>
+      </div>
+      
+      <div class="input-group">
+        <label for="T0"><i class="fas fa-thermometer-full"></i> Temperatura inicial medida (°F) a las 9:18 PM:</label>
+        <input type="number" id="T0" value="79.5" step="0.1">
+      </div>
+      
+      <div class="input-group">
+        <label for="T1"><i class="fas fa-thermometer-three-quarters"></i> Temperatura después de 1 hora (°F):</label>
+        <input type="number" id="T1" value="78.0" step="0.1">
+      </div>
+      
+      <div class="input-group">
+        <label for="Tn"><i class="fas fa-user"></i> Temperatura normal viva (°F):</label>
+        <input type="number" id="Tn" value="98.6" step="0.1">
+      </div>
+      
+      <div class="input-group">
+        <label for="Ts"><i class="fas fa-home"></i> Temperatura ambiente (°F):</label>
+        <input type="number" id="Ts" value="69" step="0.1">
+      </div>
+      
+      <button class="calc-btn" onclick="calcularNewton()">
+        <i class="fas fa-calculator"></i> Calcular Hora de Muerte
+      </button>
+      
+      <div class="resultado" id="resultadoNewton">
+        <h3><i class="fas fa-info-circle"></i> Resultado</h3>
+        <p>Ingresa los datos y presiona "Calcular Hora de Muerte" para obtener resultados.</p>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    function showTab(tabId) {
+      // Ocultar todas las secciones
+      document.querySelectorAll(".content-section").forEach(s => {
+        s.classList.remove("active");
+      });
+      
+      // Mostrar la sección seleccionada
+      document.getElementById(tabId).classList.add("active");
+      
+      // Actualizar botones de pestaña
+      document.querySelectorAll(".tab-btn").forEach(b => {
+        b.classList.remove("active");
+      });
+      
+      event.currentTarget.classList.add("active");
+    }
+
+    // --- Carbono-14 ---
+    function calcularCarbono() {
+      let vida = parseFloat(document.getElementById("vida").value);
+      let porcentaje = parseFloat(document.getElementById("porcentaje").value) / 100;
+
+      // Validación de entrada
+      if (isNaN(vida) || isNaN(porcentaje) || vida <= 0 || porcentaje <= 0 || porcentaje > 1) {
+        document.getElementById("resultadoCarbono").innerHTML = `
+          <h3><i class="fas fa-exclamation-triangle"></i> Error</h3>
+          <p>Por favor, introduce valores válidos (vida media > 0, porcentaje entre 0.01 y 100).</p>
+        `;
+        return;
+      }
+
+      // k = ln(1/2) / vida_media
+      let k = Math.log(0.5) / vida;
+
+      // f(t)/f(0) = porcentaje = e^(k*t)
+      let t = Math.log(porcentaje) / k;
+
+      document.getElementById("resultadoCarbono").innerHTML = `
+        <h3><i class="fas fa-check-circle"></i> Resultado</h3>
+        <p>Edad estimada de la muestra: <b>${Math.round(t)} años</b></p>
+        <p>Constante de decaimiento (k): <b>${k.toExponential(6)}</b></p>
+        <p>Porcentaje de carbono-14 restante: <b>${(porcentaje * 100).toFixed(2)}%</b></p>
+      `;
+    }
+
+    // --- Ley de Enfriamiento de Newton ---
+    function calcularNewton() {
+      let T0 = parseFloat(document.getElementById("T0").value);
+      let T1 = parseFloat(document.getElementById("T1").value);
+      let Tn = parseFloat(document.getElementById("Tn").value);
+      let Ts = parseFloat(document.getElementById("Ts").value);
+
+      // Validación de entrada
+      if (isNaN(T0) || isNaN(T1) || isNaN(Tn) || isNaN(Ts)) {
+        document.getElementById("resultadoNewton").innerHTML = `
+          <h3><i class="fas fa-exclamation-triangle"></i> Error</h3>
+          <p>Por favor, introduce valores válidos para todas las temperaturas.</p>
+        `;
+        return;
+      }
+
+      // Paso 1: calcular k usando T0 y T1 (1 hora después)
+      // T1 = Ts + (T0 - Ts)*e^(-k*1)
+      let k = -Math.log((T1 - Ts) / (T0 - Ts));
+
+      // Paso 2: encontrar t cuando T(t) = Tn
+      // Tn = Ts + (T0 - Ts)*e^(-k*t)
+      // => e^(-k*t) = (Tn - Ts) / (T0 - Ts)
+      let t = - (1/k) * Math.log((Tn - Ts) / (T0 - Ts));
+
+      // t será negativo (horas antes de 9:18 PM)
+      let horasAntes = Math.abs(t);
+      let fecha = new Date();
+      fecha.setHours(21, 18, 0, 0); // 9:18 PM
+      fecha.setMinutes(fecha.getMinutes() - Math.round(horasAntes * 60));
+
+      let horaMuerte = fecha.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+
+      document.getElementById("resultadoNewton").innerHTML = `
+        <h3><i class="fas fa-check-circle"></i> Resultado</h3>
+        <p>Hora estimada de la muerte: <b>${horaMuerte}</b></p>
+        <p>Tiempo transcurrido desde la muerte: <b>${horasAntes.toFixed(2)} horas</b></p>
+        <p>Constante de enfriamiento (k): <b>${k.toFixed(6)}</b></p>
+      `;
+    }
+  </script>
+</body>
+</html>
